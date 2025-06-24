@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  cidade1: MyString
+  cidade2: MyString
+  cidade3: MyString
+  cidade4: MyString
+  cidade5: MyString
+  string: MyString
+
+two:
+  cidade1: MyString
+  cidade2: MyString
+  cidade3: MyString
+  cidade4: MyString
+  cidade5: MyString
+  string: MyString

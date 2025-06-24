@@ -1,0 +1,2 @@
+class LHistograma < ApplicationRecord
+end

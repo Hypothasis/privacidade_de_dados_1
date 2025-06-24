@@ -1,0 +1,143 @@
+<div class="conteiner">
+  <div class="title">
+    <h1>Precisão: <%= @statistics.precisao %>%</h1>
+
+    <div class="estatistica">
+      <p>Classes totais geradas: <%= @statistics.classes_geradas %> unidades</p>
+    </div>
+
+    <div>
+      <p>K: <%= @statistics.k %></p>
+      <p>L: <%= @statistics.l %></p>
+    </div>
+
+
+    <a href="/baixar_csv">Baixar CSV</a>
+  </div>
+
+
+  <div class="main-content">
+    <div class="chart wide-chart">
+      <canvas id="l_histograma"></canvas>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <div class="chart wide-chart">
+      <canvas id="pie_estado"></canvas>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    let doughnut_estadoCanvas = document.getElementById('pie_estado');
+    let bar_lCanvas = document.getElementById('l_histograma');
+
+    let doughnut_estadoLabels = [];
+    let doughnut_estadoItens = [];
+
+    let bar_lTitle = [];
+    let bar_lPrice = [];
+
+    fetch("/get", {
+        method: 'GET', // ❗ Corrigido: era POST, mas a rota /get geralmente é GET
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+      .then(response => response.json())
+      .then(response => {
+          const doughnut_estado = response.data.doughnut_estado;
+          const bar_l = response.data.pie_bar_l;
+
+          // Verifica se dados vieram corretamente
+          if (!doughnut_estado || !bar_l) {
+              console.error("Erro ao receber dados!");
+              return;
+          }
+
+          // Preencher dados do doughnut
+          Object.entries(doughnut_estado).forEach(([cidade, count]) => {
+              doughnut_estadoLabels.push(cidade);
+              doughnut_estadoItens.push(count);
+          });
+
+          // Preencher dados do histograma
+          Object.values(bar_l).forEach(([label, value]) => {
+              bar_lTitle.push(label);
+              bar_lPrice.push(value);
+          });
+
+          // Criar gráfico de doughnut
+          new Chart(doughnut_estadoCanvas, {
+              type: 'doughnut',
+              data: {
+                  labels: doughnut_estadoLabels,
+                  datasets: [{
+                      label: 'Cidades',
+                      data: doughnut_estadoItens,
+                      backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
+                      borderColor: 'rgba(0,0,0,0.75)'
+                  }]
+              },
+              options: {
+                  responsive: true,
+                  plugins: {
+                      legend: {
+                          position: 'top',
+                          labels: {
+                              color: 'white'
+                          }
+                      },
+                      title: {
+                          display: true,
+                          text: 'Top 5 cidades no dataset',
+                          color: 'white'
+                      }
+                  }
+              }
+          });
+
+          // Criar gráfico de barras
+          new Chart(bar_lCanvas, {
+              type: 'bar',
+              data: {
+                  labels: bar_lTitle,
+                  datasets: [{
+                      label: 'Quantidade de raças por classe',
+                      data: bar_lPrice,
+                      backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
+                      borderColor: 'rgba(0,0,0,0.75)',
+                      borderWidth: 1
+                  }]
+              },
+              options: {
+                  responsive: true,
+                  plugins: {
+                      legend: { display: false },
+                      title: {
+                          display: true,
+                          text: 'Diversidade de raças por grupo',
+                          color: 'white'
+                      }
+                  },
+                  scales: {
+                      x: {
+                          ticks: { color: 'white' },
+                          grid: { color: 'rgba(255,255,255,0.2)' }
+                      },
+                      y: {
+                          beginAtZero: true,
+                          ticks: { color: 'white' },
+                          grid: { color: 'rgba(255,255,255,0.2)' }
+                      }
+                  }
+              }
+          });
+
+          console.log("Gráficos renderizados com sucesso!");
+      });
+</script>

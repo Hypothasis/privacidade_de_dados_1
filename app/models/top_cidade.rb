@@ -1,0 +1,2 @@
+class TopCidade < ApplicationRecord
+end

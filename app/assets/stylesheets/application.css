@@ -1,0 +1,120 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Oswald&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+
+:root{
+
+    /* Fontes */
+
+    --oswald: "Oswald", serif;
+    --roboto:"Roboto Mono", serif;
+    --ubuntu: "Ubuntu", serif;
+    --anton: "Anton", serif;
+    --poppins: "Poppins", serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #2E2F30;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+}
+
+.conteiner{
+    background-color: white;
+    border-radius: 20px;
+    box-shadow: 1px 1px 10px #a2a2a2;
+    width: clamp(200px, 90vw,1250px);
+    height: 95%;
+    overflow: scroll;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3%;
+}
+
+.conteiner h1{
+    font-family: var(--poppins);
+    font-size: clamp(1rem, 6vw, 3rem);
+}
+
+.conteiner p{
+    font-family: var(--oswald);
+    font-size: 1.3rem;
+}
+
+.title{
+    margin-top: 5%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.title div{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20%;
+}
+
+.estatistica{
+    margin: 20px;
+    text-align: center;
+}
+
+a{
+    box-shadow: 1px 1px 5px grey;
+    border-radius: 7px;
+    border-style: none;
+    margin-top: 20px;
+    width: 200px;
+    height: 50px;
+    font-family: var(--ubuntu);
+    font-weight: bolder;
+    font-size: 1rem;
+    background-color: rgb(235, 134, 41);
+    color:  white;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease-in-out;
+}
+
+a:hover{
+    cursor: pointer;
+    background-color: rgb(254, 188, 107);
+    box-shadow: 5px 5px 20px grey;
+}
+
+.main-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+    padding: 1rem 0;
+}
+
+.chart {
+    background-color: rgb(34, 34, 34);
+    padding: 1rem;
+    border-radius: 1rem;
+    box-shadow: 0 0 16px rgba(0, 0, 0, 0.534);
+    width: 90%;
+    max-width: 400px;
+    aspect-ratio: 1 / 1;
+}
+
+.wide-chart {
+    max-width: 800px;
+    aspect-ratio: 2 / 1;
+}

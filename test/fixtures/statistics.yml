@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  k: 1
+  l: 1
+  precisao: 1.5
+  classes_geradas: 1
+
+two:
+  k: 1
+  l: 1
+  precisao: 1.5
+  classes_geradas: 1
