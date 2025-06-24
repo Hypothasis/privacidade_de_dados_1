@@ -60,6 +60,17 @@ class HomeController < ApplicationController
     end
     Rails.logger.info "Salvo top 5 cidades"
 
+    # Calcula top 5 classes de equivalência
+    top_k_classes = calcular_histograma_classe_equivalencia(resultado)
+
+    # Salva no banco ou em variável global, conforme sua preferência
+    top_k_classes.each_with_index do |(label, count), i|
+      registro = KHistograma.find_or_initialize_by(posicao: i + 1)
+      registro.nome_classe = label
+      registro.contagem = count
+      registro.save!
+    end
+
     # Statistics
     statistics = Statistic.find_or_create_by(id: 1)
     statistics.k = k
@@ -84,7 +95,6 @@ class HomeController < ApplicationController
     end
   end
 
-
   def get
     # Top 5 cidades
     doughnut_estado = TopCidade.order(contagem: :desc).limit(5).pluck(:nome_cidade, :contagem).to_h
@@ -99,14 +109,19 @@ class HomeController < ApplicationController
       5 => ['5', histograma.data_5]
     }
 
+    # Histograma k-anonimato
+    k_histograma = KHistograma.order(:posicao).map do |k|
+      [k.nome_classe, k.contagem]
+    end.to_h
+
     render json: {
       data: {
         doughnut_estado: doughnut_estado,
-        pie_bar_l: pie_bar_l
+        pie_bar_l: pie_bar_l,
+        k_histograma: k_histograma
       }
     }
   end
-
 
   private
 
@@ -280,7 +295,7 @@ class HomeController < ApplicationController
             nil
           end
         end.compact
-        intervalo = "[#{anos.min} - #{anos.max}]" unless anos.empty?
+        intervalo = anos.max unless anos.empty?
       end
 
       # Aplicar generalização
@@ -324,8 +339,6 @@ class HomeController < ApplicationController
       end
 
       unless foi_agregado
-        Rails.logger.info "[AVISO] Buffer final com #{buffer.size} registros NÃO satisfez k=#{k}, l=#{l} mesmo após máxima generalização."
-        # Se quiser, pode salvar para auditoria
         buffer.clear
       end
     end
@@ -379,6 +392,22 @@ class HomeController < ApplicationController
     end
     (1..5).each { |i| histograma[i] ||= 0 }
     histograma
+  end
+
+  def calcular_histograma_classe_equivalencia(csv_data)
+    # Agrupar por localidade e data de nascimento
+    grupos = csv_data.group_by { |row| [row['localidade'], row['data_nascimento']] }
+
+    # Contar número de registros por grupo e formatar a label com nível
+    grupos_transformados = grupos.map do |(localidade, data), pessoas|
+      label = "#{localidade} #{data}"
+      count = pessoas.size
+      [label, count]
+    end
+
+    # Ordenar pelas maiores classes e pegar os 5 primeiros
+    top_5 = grupos_transformados.sort_by { |_, count| -count }.first(5)
+    top_5
   end
 
   def get_histograma_data(histograma_data)

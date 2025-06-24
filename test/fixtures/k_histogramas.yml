@@ -1,0 +1,9 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  nome_classe: MyString
+  contagem: MyString
+
+two:
+  nome_classe: MyString
+  contagem: MyString

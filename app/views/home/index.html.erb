@@ -24,6 +24,12 @@
 
   <div class="main-content">
     <div class="chart wide-chart">
+      <canvas id="k_histograma"></canvas>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <div class="chart wide-chart">
       <canvas id="pie_estado"></canvas>
     </div>
   </div>
@@ -35,12 +41,16 @@
 <script>
     let doughnut_estadoCanvas = document.getElementById('pie_estado');
     let bar_lCanvas = document.getElementById('l_histograma');
+    let bar_kCanvas = document.getElementById('k_histograma');
 
     let doughnut_estadoLabels = [];
     let doughnut_estadoItens = [];
 
     let bar_lTitle = [];
     let bar_lPrice = [];
+
+    let bar_kTitle = [];
+    let bar_kPrice = [];
 
     fetch("/get", {
         method: 'GET', // ❗ Corrigido: era POST, mas a rota /get geralmente é GET
@@ -52,6 +62,7 @@
       .then(response => {
           const doughnut_estado = response.data.doughnut_estado;
           const bar_l = response.data.pie_bar_l;
+          const k_histograma = response.data.k_histograma;
 
           // Verifica se dados vieram corretamente
           if (!doughnut_estado || !bar_l) {
@@ -65,10 +76,16 @@
               doughnut_estadoItens.push(count);
           });
 
-          // Preencher dados do histograma
+          // Preencher dados do l histograma
           Object.values(bar_l).forEach(([label, value]) => {
               bar_lTitle.push(label);
               bar_lPrice.push(value);
+          });
+
+          // Preencher dados do k histograma
+          Object.entries(k_histograma).forEach(([label, count]) => {
+              bar_kTitle.push(label);
+              bar_kPrice.push(count);
           });
 
           // Criar gráfico de doughnut
@@ -121,6 +138,43 @@
                       title: {
                           display: true,
                           text: 'Diversidade de raças por grupo',
+                          color: 'white'
+                      }
+                  },
+                  scales: {
+                      x: {
+                          ticks: { color: 'white' },
+                          grid: { color: 'rgba(255,255,255,0.2)' }
+                      },
+                      y: {
+                          beginAtZero: true,
+                          ticks: { color: 'white' },
+                          grid: { color: 'rgba(255,255,255,0.2)' }
+                      }
+                  }
+              }
+          });
+
+
+          new Chart(bar_kCanvas, {
+              type: 'bar',
+              data: {
+                  labels: bar_kTitle,
+                  datasets: [{
+                      label: 'Tamanho das maiores classes de equivalência',
+                      data: bar_kPrice,
+                      backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
+                      borderColor: 'rgba(0,0,0,0.75)',
+                      borderWidth: 1
+                  }]
+              },
+              options: {
+                  responsive: true,
+                  plugins: {
+                      legend: { display: false },
+                      title: {
+                          display: true,
+                          text: 'Top 5 classes de equivalência por tamanho',
                           color: 'white'
                       }
                   },

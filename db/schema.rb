@@ -10,7 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_06_23_231951) do
+ActiveRecord::Schema[7.2].define(version: 2025_06_24_122043) do
+  create_table "k_histogramas", force: :cascade do |t|
+    t.integer "posicao"
+    t.string "nome_classe"
+    t.string "contagem"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "l_histogramas", force: :cascade do |t|
     t.integer "data_1"
     t.integer "data_2"

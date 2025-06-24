@@ -1,0 +1,2 @@
+class KHistograma < ApplicationRecord
+end
