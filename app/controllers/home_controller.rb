@@ -17,8 +17,8 @@ class HomeController < ApplicationController
   def run
     @all_cidades = Hash.new(0)
     file_path = Rails.root.join('public', 'dados_covid.csv')
-    k = 2
-    l = 2
+    k = 4
+    l = 3
 
     # Principais métodos para anonimização
     csv_data = CSV.read(file_path, headers: true)
